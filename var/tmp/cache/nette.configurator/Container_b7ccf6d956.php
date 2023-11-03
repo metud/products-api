@@ -231,6 +231,7 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 		'Nettrine\Fixtures\Command\LoadDataFixturesCommand' => [['nettrine.fixtures.loadDataFixturesCommand']],
 		'Doctrine\Common\Cache\Cache' => [['nettrine.cache.driver']],
 		'App\Domain\Api\Facade\UsersFacade' => [['01']],
+		'App\Domain\Api\Facade\ProductsFacade' => [['02']],
 		'Symfony\Component\Serializer\SerializerInterface' => [['symfony.serializer.serializer']],
 		'Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface' => [['symfony.serializer.serializer']],
 		'Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface' => [['symfony.serializer.serializer']],
@@ -273,27 +274,29 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 		'App\Model\Api\Middleware\CORSMiddleware' => [['middleware.cors']],
 		'App\Model\Api\Middleware\AuthenticationMiddleware' => [['middleware.authenticator']],
 		'App\Module\V1\BaseV1Controller' => [
-			['02', 'resource._App_Module_.2', 'resource._App_Module_.3', 'resource._App_Module_.4'],
+			['03', 'resource._App_Module_.3', 'resource._App_Module_.4', 'resource._App_Module_.5'],
 		],
 		'App\Module\BaseController' => [
-			['02', 'resource._App_Module_.2', 'resource._App_Module_.3', 'resource._App_Module_.4'],
+			['03', 'resource._App_Module_.3', 'resource._App_Module_.4', 'resource._App_Module_.5'],
 		],
 		'Apitte\Core\UI\Controller\IController' => [
 			[
-				'02',
+				'03',
 				'resource._App_Module_.1',
 				'resource._App_Module_.2',
 				'resource._App_Module_.3',
 				'resource._App_Module_.4',
+				'resource._App_Module_.5',
 			],
 		],
-		'App\Module\V1\StaticController' => [['02']],
-		'App\Module\PubV1\BasePubV1Controller' => [['resource._App_Module_.1']],
-		'App\Module\BasePubController' => [['resource._App_Module_.1']],
+		'App\Module\V1\StaticController' => [['03']],
+		'App\Module\PubV1\BasePubV1Controller' => [['resource._App_Module_.1', 'resource._App_Module_.2']],
+		'App\Module\BasePubController' => [['resource._App_Module_.1', 'resource._App_Module_.2']],
 		'App\Module\PubV1\OpenApiController' => [['resource._App_Module_.1']],
-		'App\Module\V1\UserCreateController' => [['resource._App_Module_.2']],
-		'App\Module\V1\UsersController' => [['resource._App_Module_.3']],
-		'App\Module\V1\UsersOneController' => [['resource._App_Module_.4']],
+		'App\Module\PubV1\ProductsController' => [['resource._App_Module_.2']],
+		'App\Module\V1\UserCreateController' => [['resource._App_Module_.3']],
+		'App\Module\V1\UsersController' => [['resource._App_Module_.4']],
+		'App\Module\V1\UsersOneController' => [['resource._App_Module_.5']],
 		'Apitte\Core\Schema\Serialization\IHydrator' => [['api.core.schema.hydrator']],
 		'Apitte\Core\Schema\Serialization\ArrayHydrator' => [['api.core.schema.hydrator']],
 	];
@@ -311,7 +314,13 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 	}
 
 
-	public function createService02(): App\Module\V1\StaticController
+	public function createService02(): App\Domain\Api\Facade\ProductsFacade
+	{
+		return new App\Domain\Api\Facade\ProductsFacade($this->getService('nettrine.orm.entityManagerDecorator'));
+	}
+
+
+	public function createService03(): App\Module\V1\StaticController
 	{
 		return new App\Module\V1\StaticController('This is example of static text');
 	}
@@ -371,6 +380,18 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 				'negotiations' => [],
 				'attributes' => ['pattern' => '/api/public/v1/openapi/meta'],
 				'openApi' => ['controller' => [], 'method' => ['summary' => 'Get OpenAPI definition.']],
+			],
+			[
+				'handler' => ['class' => 'App\Module\PubV1\ProductsController', 'method' => 'index'],
+				'id' => null,
+				'tags' => ['Products' => null],
+				'methods' => ['GET'],
+				'mask' => '/api/public/v1/products',
+				'parameters' => [],
+				'responses' => [],
+				'negotiations' => [],
+				'attributes' => ['pattern' => '/api/public/v1/products'],
+				'openApi' => ['controller' => [], 'method' => ['summary' => 'Products list.']],
 			],
 			[
 				'handler' => ['class' => 'App\Module\V1\StaticController', 'method' => 'text'],
@@ -1041,19 +1062,25 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 	}
 
 
-	public function createServiceResource___App_Module___2(): App\Module\V1\UserCreateController
+	public function createServiceResource___App_Module___2(): App\Module\PubV1\ProductsController
+	{
+		return new App\Module\PubV1\ProductsController($this->getService('02'));
+	}
+
+
+	public function createServiceResource___App_Module___3(): App\Module\V1\UserCreateController
 	{
 		return new App\Module\V1\UserCreateController($this->getService('01'));
 	}
 
 
-	public function createServiceResource___App_Module___3(): App\Module\V1\UsersController
+	public function createServiceResource___App_Module___4(): App\Module\V1\UsersController
 	{
 		return new App\Module\V1\UsersController($this->getService('01'));
 	}
 
 
-	public function createServiceResource___App_Module___4(): App\Module\V1\UsersOneController
+	public function createServiceResource___App_Module___5(): App\Module\V1\UsersOneController
 	{
 		return new App\Module\V1\UsersOneController($this->getService('01'));
 	}

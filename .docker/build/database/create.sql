@@ -1,7 +1,7 @@
 CREATE TABLE "app_products" (
     id SERIAL PRIMARY KEY,
     name varchar(100) NOT NULL,
-    price numeric(10,2) NOT NULL,
+    price DOUBLE PRECISION NOT NULL,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
