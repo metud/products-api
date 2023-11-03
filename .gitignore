@@ -1,5 +1,5 @@
 # Nette
-/config/local.neon
+#/config/local.neon
 
 # Composer
 /vendor
@@ -17,3 +17,6 @@
 
 # Docker
 /.docker/data
+
+/.idea
+.env

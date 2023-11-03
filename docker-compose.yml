@@ -1,0 +1,43 @@
+version: '4.24'
+
+services:
+  php:
+    container_name: web
+    #image: web
+    build: .docker/build/php
+    volumes:
+      - ./:/var/www/html:cached
+    ports:
+      - "80:80"
+    environment:
+      NETTE_DEBUG: 1
+      PHP_EXTENSION_XDEBUG: 1
+      PHP_EXTENSION_PGSQL: 1
+      PHP_EXTENSION_PDO_PGSQL: 1
+      PHP_EXTENSION_MYSQLI: 1
+      STARTUP_COMMAND_1: composer install
+      STARTUP_COMMAND_2: NETTE_DEBUG=1 php bin/console migrations:migrate --no-interaction
+      STARTUP_COMMAND_3: NETTE_DEBUG=1 php bin/console doctrine:fixtures:load --no-interaction
+    links:
+      - database
+
+  database:
+    container_name: db
+    #image: db
+    build: .docker/build/database
+    restart: always
+    environment:
+      POSTGRES_DB: products-api
+      POSTGRES_USER: products-api
+      POSTGRES_PASSWORD: cloud
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.docker/build/database/create.sql:/docker-entrypoint-initdb.d/create.sql
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - "8081:8080"
