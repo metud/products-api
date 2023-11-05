@@ -1,6 +1,6 @@
 <?php
-// source: /var/www/html/app/../config/env/prod.neon
-// source: /var/www/html/app/../config/local.neon
+// source: /Users/alexandrakern/Desktop/mates/products-api/app/../config/env/prod.neon
+// source: /Users/alexandrakern/Desktop/mates/products-api/app/../config/local.neon
 // source: array
 // source: array
 
@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-class Container_b7ccf6d956 extends Nette\DI\Container
+class Container_c8bc5a7b21 extends Nette\DI\Container
 {
 	protected $tags = [
 		'middleware' => [
@@ -20,8 +20,9 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 			'middleware.tryCatch' => ['priority' => 1],
 			'middlewares.logging' => ['priority' => 100],
 		],
-		'nette.inject' => ['nettrine.fixtures.loadDataFixturesCommand' => true],
 		'console.command' => [
+			'nettrine.dbal.console.reservedWordsCommand' => 'dbal:reserved-words',
+			'nettrine.dbal.console.runSqlCommand' => 'dbal:run-sql',
 			'nettrine.fixtures.loadDataFixturesCommand' => 'doctrine:fixtures:load',
 			'nettrine.migrations.currentCommand' => 'migrations:current',
 			'nettrine.migrations.diffCommand' => 'migrations:diff',
@@ -36,7 +37,21 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 			'nettrine.migrations.syncMetadataCommand' => 'migrations:sync-metadata-storage',
 			'nettrine.migrations.upToDateCommand' => 'migrations:up-to-date',
 			'nettrine.migrations.versionCommand' => 'migrations:version',
+			'nettrine.orm.console.clearMetadataCacheCommand' => 'orm:clear-cache:metadata',
+			'nettrine.orm.console.convertMappingCommand' => 'orm:convert-mapping',
+			'nettrine.orm.console.ensureProductionSettingsCommand' => 'orm:ensure-production-settings',
+			'nettrine.orm.console.generateEntitiesCommand' => 'orm:generate-entities',
+			'nettrine.orm.console.generateProxiesCommand' => 'orm:generate-proxies',
+			'nettrine.orm.console.generateRepositoriesCommand' => 'orm:generate-repositories',
+			'nettrine.orm.console.infoCommand' => 'orm:info',
+			'nettrine.orm.console.mappingDescribeCommand' => 'orm:mapping:describe',
+			'nettrine.orm.console.runDqlCommand' => 'orm:run-dql',
+			'nettrine.orm.console.schemaToolCreateCommand' => 'orm:schema-tool:create',
+			'nettrine.orm.console.schemaToolDropCommand' => 'orm:schema-tool:drop',
+			'nettrine.orm.console.schemaToolUpdateCommand' => 'orm:schema-tool:update',
+			'nettrine.orm.console.validateSchemaCommand' => 'orm:validate-schema',
 		],
+		'nette.inject' => ['nettrine.fixtures.loadDataFixturesCommand' => true],
 		'nettrine.orm.annotation.driver' => ['nettrine.orm.annotations.annotationDriver' => true],
 		'nettrine.orm.mapping.driver' => ['nettrine.orm.mappingDriver' => true],
 	];
@@ -93,6 +108,10 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 		'Apitte\OpenApi\SchemaDefinition\CoreDefinition' => [['api.openapi.coreDefinition']],
 		'Apitte\OpenApi\ISchemaBuilder' => [['api.openapi.schemaBuilder']],
 		'Apitte\OpenApi\SchemaBuilder' => [['api.openapi.schemaBuilder']],
+		'Symfony\Component\Console\Application' => [['console.application']],
+		'Symfony\Contracts\Service\ResetInterface' => [['console.application']],
+		'Contributte\Console\Application' => [['console.application']],
+		'Symfony\Component\Console\CommandLoader\CommandLoaderInterface' => [['console.commandLoader']],
 		'Monolog\Handler\StreamHandler' => [2 => ['monolog.logger.default.handler.0']],
 		'Monolog\Handler\AbstractProcessingHandler' => [2 => ['monolog.logger.default.handler.0']],
 		'Monolog\Handler\AbstractHandler' => [2 => ['monolog.logger.default.handler.0']],
@@ -126,22 +145,54 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 		'Doctrine\Common\Annotations\AnnotationReader' => [
 			2 => ['nettrine.annotations.delegatedReader', 'symfony.serializer.annotationReader'],
 		],
-		'Doctrine\DBAL\Logging\SQLLogger' => [
-			['nettrine.dbal.profiler'],
-			['nettrine.dbal.logger'],
-			['nettrine.dbal.logger.config'],
-		],
+		'Doctrine\DBAL\Logging\SQLLogger' => [1 => ['nettrine.dbal.logger'], ['nettrine.dbal.logger.config']],
 		'Nettrine\DBAL\Logger\PsrLogger' => [2 => ['nettrine.dbal.logger.config']],
-		'Nettrine\DBAL\Logger\AbstractLogger' => [['nettrine.dbal.profiler']],
-		'Nettrine\DBAL\Logger\ProfilerLogger' => [['nettrine.dbal.profiler']],
 		'Doctrine\DBAL\Logging\LoggerChain' => [['nettrine.dbal.logger']],
 		'Doctrine\DBAL\Configuration' => [0 => ['nettrine.orm.configuration'], 2 => ['nettrine.dbal.configuration']],
-		'Doctrine\Common\EventManager' => [0 => ['nettrine.dbal.eventManager.debug'], 2 => ['nettrine.dbal.eventManager']],
-		'Nettrine\DBAL\Events\ContainerAwareEventManager' => [2 => ['nettrine.dbal.eventManager']],
-		'Nettrine\DBAL\Events\DebugEventManager' => [['nettrine.dbal.eventManager.debug']],
+		'Doctrine\Common\EventManager' => [['nettrine.dbal.eventManager']],
+		'Nettrine\DBAL\Events\ContainerAwareEventManager' => [['nettrine.dbal.eventManager']],
 		'Nettrine\DBAL\ConnectionFactory' => [['nettrine.dbal.connectionFactory']],
 		'Doctrine\DBAL\Connection' => [['nettrine.dbal.connection']],
 		'Nettrine\DBAL\ConnectionAccessor' => [['nettrine.dbal.connectionAccessor']],
+		'Doctrine\DBAL\Tools\Console\ConnectionProvider' => [2 => ['nettrine.dbal.console.connectionProvider']],
+		'Doctrine\DBAL\Tools\Console\ConnectionProvider\SingleConnectionProvider' => [
+			2 => ['nettrine.dbal.console.connectionProvider'],
+		],
+		'Symfony\Component\Console\Command\Command' => [
+			0 => ['nettrine.fixtures.loadDataFixturesCommand'],
+			2 => [
+				'nettrine.dbal.console.reservedWordsCommand',
+				'nettrine.dbal.console.runSqlCommand',
+				'nettrine.orm.console.schemaToolCreateCommand',
+				'nettrine.orm.console.schemaToolUpdateCommand',
+				'nettrine.orm.console.schemaToolDropCommand',
+				'nettrine.orm.console.convertMappingCommand',
+				'nettrine.orm.console.ensureProductionSettingsCommand',
+				'nettrine.orm.console.generateEntitiesCommand',
+				'nettrine.orm.console.generateProxiesCommand',
+				'nettrine.orm.console.generateRepositoriesCommand',
+				'nettrine.orm.console.infoCommand',
+				'nettrine.orm.console.mappingDescribeCommand',
+				'nettrine.orm.console.runDqlCommand',
+				'nettrine.orm.console.validateSchemaCommand',
+				'nettrine.orm.console.clearMetadataCacheCommand',
+				'nettrine.migrations.currentCommand',
+				'nettrine.migrations.diffCommand',
+				'nettrine.migrations.dumpSchemaCommand',
+				'nettrine.migrations.executeCommand',
+				'nettrine.migrations.generateCommand',
+				'nettrine.migrations.latestCommand',
+				'nettrine.migrations.listCommand',
+				'nettrine.migrations.migrateCommand',
+				'nettrine.migrations.rollupCommand',
+				'nettrine.migrations.statusCommand',
+				'nettrine.migrations.syncMetadataCommand',
+				'nettrine.migrations.upToDateCommand',
+				'nettrine.migrations.versionCommand',
+			],
+		],
+		'Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand' => [2 => ['nettrine.dbal.console.reservedWordsCommand']],
+		'Doctrine\DBAL\Tools\Console\Command\RunSqlCommand' => [2 => ['nettrine.dbal.console.runSqlCommand']],
 		'Doctrine\ORM\Configuration' => [['nettrine.orm.configuration']],
 		'Doctrine\ORM\Mapping\EntityListenerResolver' => [['nettrine.orm.entityListenerResolver']],
 		'Nettrine\ORM\Mapping\ContainerEntityListenerResolver' => [['nettrine.orm.entityListenerResolver']],
@@ -163,6 +214,64 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 		'Doctrine\ORM\Cache\CacheFactory' => [2 => ['nettrine.orm.cache.cacheFactory']],
 		'Doctrine\ORM\Cache\DefaultCacheFactory' => [2 => ['nettrine.orm.cache.cacheFactory']],
 		'Doctrine\ORM\Cache\CacheConfiguration' => [2 => ['nettrine.orm.cache.cacheConfiguration']],
+		'Symfony\Component\Console\Helper\Helper' => [2 => ['nettrine.orm.console.entityManagerHelper']],
+		'Symfony\Component\Console\Helper\HelperInterface' => [2 => ['nettrine.orm.console.entityManagerHelper']],
+		'Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper' => [2 => ['nettrine.orm.console.entityManagerHelper']],
+		'Doctrine\ORM\Tools\Console\Command\SchemaTool\AbstractCommand' => [
+			2 => [
+				'nettrine.orm.console.schemaToolCreateCommand',
+				'nettrine.orm.console.schemaToolUpdateCommand',
+				'nettrine.orm.console.schemaToolDropCommand',
+			],
+		],
+		'Doctrine\ORM\Tools\Console\Command\AbstractEntityManagerCommand' => [
+			2 => [
+				'nettrine.orm.console.schemaToolCreateCommand',
+				'nettrine.orm.console.schemaToolUpdateCommand',
+				'nettrine.orm.console.schemaToolDropCommand',
+				'nettrine.orm.console.convertMappingCommand',
+				'nettrine.orm.console.ensureProductionSettingsCommand',
+				'nettrine.orm.console.generateEntitiesCommand',
+				'nettrine.orm.console.generateProxiesCommand',
+				'nettrine.orm.console.generateRepositoriesCommand',
+				'nettrine.orm.console.infoCommand',
+				'nettrine.orm.console.mappingDescribeCommand',
+				'nettrine.orm.console.runDqlCommand',
+				'nettrine.orm.console.validateSchemaCommand',
+				'nettrine.orm.console.clearMetadataCacheCommand',
+			],
+		],
+		'Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand' => [
+			2 => ['nettrine.orm.console.schemaToolCreateCommand'],
+		],
+		'Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand' => [
+			2 => ['nettrine.orm.console.schemaToolUpdateCommand'],
+		],
+		'Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand' => [
+			2 => ['nettrine.orm.console.schemaToolDropCommand'],
+		],
+		'Doctrine\ORM\Tools\Console\Command\ConvertMappingCommand' => [2 => ['nettrine.orm.console.convertMappingCommand']],
+		'Doctrine\ORM\Tools\Console\Command\EnsureProductionSettingsCommand' => [
+			2 => ['nettrine.orm.console.ensureProductionSettingsCommand'],
+		],
+		'Doctrine\ORM\Tools\Console\Command\GenerateEntitiesCommand' => [
+			2 => ['nettrine.orm.console.generateEntitiesCommand'],
+		],
+		'Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand' => [
+			2 => ['nettrine.orm.console.generateProxiesCommand'],
+		],
+		'Doctrine\ORM\Tools\Console\Command\GenerateRepositoriesCommand' => [
+			2 => ['nettrine.orm.console.generateRepositoriesCommand'],
+		],
+		'Doctrine\ORM\Tools\Console\Command\InfoCommand' => [2 => ['nettrine.orm.console.infoCommand']],
+		'Doctrine\ORM\Tools\Console\Command\MappingDescribeCommand' => [
+			2 => ['nettrine.orm.console.mappingDescribeCommand'],
+		],
+		'Doctrine\ORM\Tools\Console\Command\RunDqlCommand' => [2 => ['nettrine.orm.console.runDqlCommand']],
+		'Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand' => [2 => ['nettrine.orm.console.validateSchemaCommand']],
+		'Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand' => [
+			2 => ['nettrine.orm.console.clearMetadataCacheCommand'],
+		],
 		'Doctrine\ORM\Mapping\Driver\CompatibilityAnnotationDriver' => [2 => ['nettrine.orm.annotations.annotationDriver']],
 		'Doctrine\ORM\Mapping\Driver\AnnotationDriver' => [2 => ['nettrine.orm.annotations.annotationDriver']],
 		'Doctrine\Migrations\Metadata\Storage\MetadataStorageConfiguration' => [
@@ -177,24 +286,6 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 		'Nettrine\Migrations\DI\DependencyFactory' => [2 => ['nettrine.migrations.nettrineDependencyFactory']],
 		'Doctrine\Migrations\DependencyFactory' => [['nettrine.migrations.dependencyFactory']],
 		'Doctrine\Migrations\Tools\Console\Command\DoctrineCommand' => [
-			2 => [
-				'nettrine.migrations.currentCommand',
-				'nettrine.migrations.diffCommand',
-				'nettrine.migrations.dumpSchemaCommand',
-				'nettrine.migrations.executeCommand',
-				'nettrine.migrations.generateCommand',
-				'nettrine.migrations.latestCommand',
-				'nettrine.migrations.listCommand',
-				'nettrine.migrations.migrateCommand',
-				'nettrine.migrations.rollupCommand',
-				'nettrine.migrations.statusCommand',
-				'nettrine.migrations.syncMetadataCommand',
-				'nettrine.migrations.upToDateCommand',
-				'nettrine.migrations.versionCommand',
-			],
-		],
-		'Symfony\Component\Console\Command\Command' => [
-			0 => ['nettrine.fixtures.loadDataFixturesCommand'],
 			2 => [
 				'nettrine.migrations.currentCommand',
 				'nettrine.migrations.diffCommand',
@@ -594,7 +685,55 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 	}
 
 
-	public function createServiceContainer(): Container_b7ccf6d956
+	public function createServiceConsole__application(): Contributte\Console\Application
+	{
+		$service = new Contributte\Console\Application;
+		$service->setCommandLoader($this->getService('console.commandLoader'));
+		$service->getHelperSet()->set($this->getService('nettrine.orm.console.entityManagerHelper'),'em');
+		return $service;
+	}
+
+
+	public function createServiceConsole__commandLoader(): Symfony\Component\Console\CommandLoader\CommandLoaderInterface
+	{
+		return new Contributte\Console\CommandLoader\ContainerCommandLoader(
+			$this,
+			[
+				'dbal:reserved-words' => 'nettrine.dbal.console.reservedWordsCommand',
+				'dbal:run-sql' => 'nettrine.dbal.console.runSqlCommand',
+				'orm:schema-tool:create' => 'nettrine.orm.console.schemaToolCreateCommand',
+				'orm:schema-tool:update' => 'nettrine.orm.console.schemaToolUpdateCommand',
+				'orm:schema-tool:drop' => 'nettrine.orm.console.schemaToolDropCommand',
+				'orm:convert-mapping' => 'nettrine.orm.console.convertMappingCommand',
+				'orm:ensure-production-settings' => 'nettrine.orm.console.ensureProductionSettingsCommand',
+				'orm:generate-entities' => 'nettrine.orm.console.generateEntitiesCommand',
+				'orm:generate-proxies' => 'nettrine.orm.console.generateProxiesCommand',
+				'orm:generate-repositories' => 'nettrine.orm.console.generateRepositoriesCommand',
+				'orm:info' => 'nettrine.orm.console.infoCommand',
+				'orm:mapping:describe' => 'nettrine.orm.console.mappingDescribeCommand',
+				'orm:run-dql' => 'nettrine.orm.console.runDqlCommand',
+				'orm:validate-schema' => 'nettrine.orm.console.validateSchemaCommand',
+				'orm:clear-cache:metadata' => 'nettrine.orm.console.clearMetadataCacheCommand',
+				'migrations:current' => 'nettrine.migrations.currentCommand',
+				'migrations:diff' => 'nettrine.migrations.diffCommand',
+				'migrations:dump-schema' => 'nettrine.migrations.dumpSchemaCommand',
+				'migrations:execute' => 'nettrine.migrations.executeCommand',
+				'migrations:generate' => 'nettrine.migrations.generateCommand',
+				'migrations:latest' => 'nettrine.migrations.latestCommand',
+				'migrations:list' => 'nettrine.migrations.listCommand',
+				'migrations:migrate' => 'nettrine.migrations.migrateCommand',
+				'migrations:rollup' => 'nettrine.migrations.rollupCommand',
+				'migrations:status' => 'nettrine.migrations.statusCommand',
+				'migrations:sync-metadata-storage' => 'nettrine.migrations.syncMetadataCommand',
+				'migrations:up-to-date' => 'nettrine.migrations.upToDateCommand',
+				'migrations:version' => 'nettrine.migrations.versionCommand',
+				'doctrine:fixtures:load' => 'nettrine.fixtures.loadDataFixturesCommand',
+			],
+		);
+	}
+
+
+	public function createServiceContainer(): Container_c8bc5a7b21
 	{
 		return $this;
 	}
@@ -602,7 +741,7 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 
 	public function createServiceHttp__request(): Nette\Http\Request
 	{
-		return $this->getService('http.requestFactory')->fromGlobals();
+		return new Nette\Http\Request(new Nette\Http\UrlScript('http://localhost/'));
 	}
 
 
@@ -643,8 +782,8 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 	public function createServiceMiddleware__tryCatch(): Contributte\Middlewares\TryCatchMiddleware
 	{
 		$service = new Contributte\Middlewares\TryCatchMiddleware;
-		$service->setDebugMode(true);
-		$service->setCatchExceptions(false);
+		$service->setDebugMode(false);
+		$service->setCatchExceptions(true);
 		$service->setLogger($this->getService('monolog.logger.default'), Psr\Log\LogLevel::ERROR);
 		return $service;
 	}
@@ -693,7 +832,11 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 
 	public function createServiceMonolog__logger__default__handler__0(): Monolog\Handler\RotatingFileHandler
 	{
-		return new Monolog\Handler\RotatingFileHandler('/var/www/html/app/../var/log/syslog.log', 30, Monolog\Logger::WARNING);
+		return new Monolog\Handler\RotatingFileHandler(
+			'/Users/alexandrakern/Desktop/mates/products-api/app/../var/log/syslog.log',
+			30,
+			Monolog\Logger::WARNING,
+		);
 	}
 
 
@@ -754,7 +897,7 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 
 	public function createServiceNettrine__cache__driver(): Doctrine\Common\Cache\Cache
 	{
-		return new Doctrine\Common\Cache\PhpFileCache('/var/www/html/app/../var/tmp/cache/nettrine.cache');
+		return new Doctrine\Common\Cache\PhpFileCache('/Users/alexandrakern/Desktop/mates/products-api/app/../var/tmp/cache/nettrine.cache');
 	}
 
 
@@ -770,7 +913,7 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 
 	public function createServiceNettrine__dbal__connection(): Doctrine\DBAL\Connection
 	{
-		$service = $this->getService('nettrine.dbal.connectionFactory')->createConnection(
+		return $this->getService('nettrine.dbal.connectionFactory')->createConnection(
 			[
 				'driver' => 'pdo_pgsql',
 				'host' => 'db',
@@ -783,11 +926,8 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 				'typesMapping' => [],
 			],
 			$this->getService('nettrine.dbal.configuration'),
-			$this->getService('nettrine.dbal.eventManager.debug'),
+			$this->getService('nettrine.dbal.eventManager'),
 		);
-		$this->getService('tracy.bar')->addPanel(new Nettrine\DBAL\Tracy\QueryPanel\QueryPanel($this->getService('nettrine.dbal.profiler')));
-		$this->getService('tracy.blueScreen')->addPanel(['Nettrine\DBAL\Tracy\BlueScreen\DbalBlueScreen', 'renderException']);
-		return $service;
 	}
 
 
@@ -797,7 +937,7 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 			private $container;
 
 
-			public function __construct(Container_b7ccf6d956 $container)
+			public function __construct(Container_c8bc5a7b21 $container)
 			{
 				$this->container = $container;
 			}
@@ -817,24 +957,36 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 	}
 
 
+	public function createServiceNettrine__dbal__console__connectionProvider(
+	): Doctrine\DBAL\Tools\Console\ConnectionProvider\SingleConnectionProvider
+	{
+		return new Doctrine\DBAL\Tools\Console\ConnectionProvider\SingleConnectionProvider($this->getService('nettrine.dbal.connection'));
+	}
+
+
+	public function createServiceNettrine__dbal__console__reservedWordsCommand(
+	): Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand
+	{
+		return new Doctrine\DBAL\Tools\Console\Command\ReservedWordsCommand($this->getService('nettrine.dbal.console.connectionProvider'));
+	}
+
+
+	public function createServiceNettrine__dbal__console__runSqlCommand(
+	): Doctrine\DBAL\Tools\Console\Command\RunSqlCommand
+	{
+		return new Doctrine\DBAL\Tools\Console\Command\RunSqlCommand($this->getService('nettrine.dbal.console.connectionProvider'));
+	}
+
+
 	public function createServiceNettrine__dbal__eventManager(): Nettrine\DBAL\Events\ContainerAwareEventManager
 	{
 		return new Nettrine\DBAL\Events\ContainerAwareEventManager($this);
 	}
 
 
-	public function createServiceNettrine__dbal__eventManager__debug(): Nettrine\DBAL\Events\DebugEventManager
-	{
-		return new Nettrine\DBAL\Events\DebugEventManager($this->getService('nettrine.dbal.eventManager'));
-	}
-
-
 	public function createServiceNettrine__dbal__logger(): Doctrine\DBAL\Logging\LoggerChain
 	{
-		return new Doctrine\DBAL\Logging\LoggerChain([
-			$this->getService('nettrine.dbal.logger.config'),
-			$this->getService('nettrine.dbal.profiler'),
-		]);
+		return new Doctrine\DBAL\Logging\LoggerChain([$this->getService('nettrine.dbal.logger.config')]);
 	}
 
 
@@ -844,15 +996,9 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 	}
 
 
-	public function createServiceNettrine__dbal__profiler(): Nettrine\DBAL\Logger\ProfilerLogger
-	{
-		return new Nettrine\DBAL\Logger\ProfilerLogger($this->getService('nettrine.dbal.connectionAccessor'));
-	}
-
-
 	public function createServiceNettrine__fixtures__fixturesLoader(): Nettrine\Fixtures\Loader\FixturesLoader
 	{
-		return new Nettrine\Fixtures\Loader\FixturesLoader(['/var/www/html/db/Fixtures'], $this);
+		return new Nettrine\Fixtures\Loader\FixturesLoader(['/Users/alexandrakern/Desktop/mates/products-api/db/Fixtures'], $this);
 	}
 
 
@@ -871,7 +1017,7 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 		$service = new Doctrine\Migrations\Configuration\Configuration;
 		$service->setCustomTemplate(null);
 		$service->setMetadataStorageConfiguration($this->getService('nettrine.migrations.configuration.tableStorage'));
-		$service->addMigrationsDirectory('Database\Migrations', '/var/www/html/db/Migrations');
+		$service->addMigrationsDirectory('Database\Migrations', '/Users/alexandrakern/Desktop/mates/products-api/db/Migrations');
 		$service->setAllOrNothing(false);
 		return $service;
 	}
@@ -1013,7 +1159,7 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 	{
 		$service = new Doctrine\ORM\Mapping\Driver\AnnotationDriver($this->getService('nettrine.annotations.reader'));
 		$service->addExcludePaths([]);
-		$service->addPaths(['/var/www/html/app/Domain']);
+		$service->addPaths(['/Users/alexandrakern/Desktop/mates/products-api/app/Domain']);
 		return $service;
 	}
 
@@ -1044,8 +1190,8 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 	public function createServiceNettrine__orm__configuration(): Doctrine\ORM\Configuration
 	{
 		$service = new Doctrine\ORM\Configuration;
-		$service->setProxyDir('/var/www/html/app/../var/tmp/proxies');
-		$service->setAutoGenerateProxyClasses(2);
+		$service->setProxyDir('/Users/alexandrakern/Desktop/mates/products-api/app/../var/tmp/proxies');
+		$service->setAutoGenerateProxyClasses(0);
 		$service->setProxyNamespace('Nettrine\Proxy');
 		$service->setMetadataDriverImpl($this->getService('nettrine.orm.mappingDriver'));
 		$service->setCustomStringFunctions([]);
@@ -1064,6 +1210,103 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 	}
 
 
+	public function createServiceNettrine__orm__console__clearMetadataCacheCommand(
+	): Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand
+	{
+		return new Doctrine\ORM\Tools\Console\Command\ClearCache\MetadataCommand;
+	}
+
+
+	public function createServiceNettrine__orm__console__convertMappingCommand(
+	): Doctrine\ORM\Tools\Console\Command\ConvertMappingCommand
+	{
+		return new Doctrine\ORM\Tools\Console\Command\ConvertMappingCommand;
+	}
+
+
+	public function createServiceNettrine__orm__console__ensureProductionSettingsCommand(
+	): Doctrine\ORM\Tools\Console\Command\EnsureProductionSettingsCommand
+	{
+		return new Doctrine\ORM\Tools\Console\Command\EnsureProductionSettingsCommand;
+	}
+
+
+	public function createServiceNettrine__orm__console__entityManagerHelper(
+	): Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper
+	{
+		return new Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($this->getService('nettrine.orm.entityManagerDecorator'));
+	}
+
+
+	public function createServiceNettrine__orm__console__generateEntitiesCommand(
+	): Doctrine\ORM\Tools\Console\Command\GenerateEntitiesCommand
+	{
+		return new Doctrine\ORM\Tools\Console\Command\GenerateEntitiesCommand;
+	}
+
+
+	public function createServiceNettrine__orm__console__generateProxiesCommand(
+	): Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand
+	{
+		return new Doctrine\ORM\Tools\Console\Command\GenerateProxiesCommand;
+	}
+
+
+	public function createServiceNettrine__orm__console__generateRepositoriesCommand(
+	): Doctrine\ORM\Tools\Console\Command\GenerateRepositoriesCommand
+	{
+		return new Doctrine\ORM\Tools\Console\Command\GenerateRepositoriesCommand;
+	}
+
+
+	public function createServiceNettrine__orm__console__infoCommand(): Doctrine\ORM\Tools\Console\Command\InfoCommand
+	{
+		return new Doctrine\ORM\Tools\Console\Command\InfoCommand;
+	}
+
+
+	public function createServiceNettrine__orm__console__mappingDescribeCommand(
+	): Doctrine\ORM\Tools\Console\Command\MappingDescribeCommand
+	{
+		return new Doctrine\ORM\Tools\Console\Command\MappingDescribeCommand;
+	}
+
+
+	public function createServiceNettrine__orm__console__runDqlCommand(
+	): Doctrine\ORM\Tools\Console\Command\RunDqlCommand
+	{
+		return new Doctrine\ORM\Tools\Console\Command\RunDqlCommand;
+	}
+
+
+	public function createServiceNettrine__orm__console__schemaToolCreateCommand(
+	): Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand
+	{
+		return new Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand;
+	}
+
+
+	public function createServiceNettrine__orm__console__schemaToolDropCommand(
+	): Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand
+	{
+		return new Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
+	}
+
+
+	public function createServiceNettrine__orm__console__schemaToolUpdateCommand(
+	): Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand
+	{
+		return new Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
+	}
+
+
+	public function createServiceNettrine__orm__console__validateSchemaCommand(
+	): Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand
+	{
+		return new Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
+	}
+
+
 	public function createServiceNettrine__orm__entityListenerResolver(
 	): Nettrine\ORM\Mapping\ContainerEntityListenerResolver
 	{
@@ -1076,7 +1319,7 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 		return new App\Model\Database\EntityManagerDecorator(Doctrine\ORM\EntityManager::create(
 			$this->getService('nettrine.dbal.connection'),
 			$this->getService('nettrine.orm.configuration'),
-			$this->getService('nettrine.dbal.eventManager.debug'),
+			$this->getService('nettrine.dbal.eventManager'),
 		));
 	}
 
@@ -1148,7 +1391,7 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 	{
 		return new Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader(new Doctrine\Common\Annotations\CachedReader(
 			$this->getService('symfony.serializer.annotationReader'),
-			new Doctrine\Common\Cache\FilesystemCache('/var/www/html/app/../var/tmp/cache/Symfony.Serializer'),
+			new Doctrine\Common\Cache\FilesystemCache('/Users/alexandrakern/Desktop/mates/products-api/app/../var/tmp/cache/Symfony.Serializer'),
 		));
 	}
 
@@ -1203,7 +1446,7 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 	{
 		return Symfony\Component\Validator\Validation::createValidatorBuilder()->enableAnnotationMapping(new Doctrine\Common\Annotations\CachedReader(
 			$this->getService('symfony.serializer.annotationReader'),
-			new Doctrine\Common\Cache\FilesystemCache('/var/www/html/app/../var/tmp/cache/Symfony.Validator'),
+			new Doctrine\Common\Cache\FilesystemCache('/Users/alexandrakern/Desktop/mates/products-api/app/../var/tmp/cache/Symfony.Validator'),
 		));
 	}
 
@@ -1229,22 +1472,10 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 	public function initialize(): void
 	{
 		Doctrine\Common\Annotations\AnnotationRegistry::registerUniqueLoader("class_exists");
-		// http.
-		(function () {
-			$response = $this->getService('http.response');
-			$response->setHeader('X-Powered-By', 'Nette Framework 3');
-			$response->setHeader('Content-Type', 'text/html; charset=utf-8');
-			$response->setHeader('X-Frame-Options', 'SAMEORIGIN');
-			Nette\Http\Helpers::initCookie($this->getService('http.request'), $response);
-		})();
 		// php.
 		(function () {
 			ini_set('date.timezone', (string) ('Europe/Prague'));
 			ini_set('output_buffering', (string) (4096));
-		})();
-		// session.
-		(function () {
-			$this->getService('session.session')->autoStart(false);
 		})();
 		// tracy.
 		(function () {
@@ -1276,13 +1507,13 @@ class Container_b7ccf6d956 extends Nette\DI\Container
 				'user' => 'products-api',
 				'password' => 'cloud',
 			],
-			'appDir' => '/var/www/html/app',
-			'wwwDir' => '/var/www/html/www',
-			'debugMode' => true,
-			'productionMode' => false,
-			'consoleMode' => false,
-			'tempDir' => '/var/www/html/app/../var/tmp',
-			'rootDir' => '/var/www/html',
+			'appDir' => '/Users/alexandrakern/Desktop/mates/products-api/app',
+			'wwwDir' => '/Users/alexandrakern/Desktop/mates/products-api/www',
+			'debugMode' => false,
+			'productionMode' => true,
+			'consoleMode' => true,
+			'tempDir' => '/Users/alexandrakern/Desktop/mates/products-api/app/../var/tmp',
+			'rootDir' => '/Users/alexandrakern/Desktop/mates/products-api',
 		];
 	}
 }

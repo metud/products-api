@@ -11,6 +11,7 @@ use App\Domain\Api\Response\ProductResDto;
 use App\Model\Utils\Caster;
 use Psr\Http\Message\ResponseInterface;
 use Nette\Utils\Json;
+use Psr\Log\LoggerInterface;
 
 /**
  * @Apitte\Path("/products")
@@ -20,10 +21,12 @@ class ProductsController extends BasePubV1Controller
 {
 
     private ProductsFacade $productsFacade;
+    private LoggerInterface $logger;
 
-    public function __construct(ProductsFacade $productsFacade)
+    public function __construct(ProductsFacade $productsFacade, LoggerInterface $logger)
     {
         $this->productsFacade = $productsFacade;
+        $this->logger = $logger;
     }
 
     /**
@@ -32,12 +35,43 @@ class ProductsController extends BasePubV1Controller
      * ")
      * @Apitte\Path("/")
      * @Apitte\Method("GET")
+     * @Apitte\RequestParameters({
+     *  		@Apitte\RequestParameter(name="limit", type="int", in="query", required=false, description="Data limit"),
+     *  		@Apitte\RequestParameter(name="offset", type="int", in="query", required=false, description="Data offset")
+     *  })
      */
     public function index(ApiRequest $request, ApiResponse $response): ApiResponse
     {
         //endpoint is http://example.com/api/public/v1/products/
+        //var_dump("test", $this->productsFacade->findAll());exit;
+        try {
+            $getProducts = $this->productsFacade->findAll(
+                Caster::toInt($request->getParameter('limit', 10)),
+                Caster::toInt($request->getParameter('offset', 0))
+            );
 
-        $response = $response->writeBody(Json::encode([
+            return $response->writeJsonBody($getProducts);
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            $response->withStatus(500);
+            $response->writeJsonBody(['status' => 'error', 'code' => 500, 'message' => 'An unexpected error occurred.']);
+            return [];
+        }
+
+       // $getProducts = $this->productsFacade->findAll();
+        //return $this->productsFacade->findAll(
+           // Caster::toInt($request->getParameter('limit', 10)),
+         //   Caster::toInt($request->getParameter('offset', 0))
+       // );
+
+
+
+        //return $response
+         //   ->writeJsonBody($getProducts);
+
+        //$response = $response->writeJsonBody($getProducts);
+
+        /*$response = $response->writeBody(Json::encode([
             [
                 'id' => 1,
                 'product' => 'Blue Jacket',
@@ -53,9 +87,9 @@ class ProductsController extends BasePubV1Controller
                 'product' => 'Red T-Shirt',
                 'price' => '769,00 Kc',
             ],
-        ]));
+        ]));*/
 
-        return $response;
+        //return $response;
     }
 
 	/**

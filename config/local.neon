@@ -4,7 +4,7 @@ parameters:
 	# Database (postgres)
 	database:
 		driver: pdo_pgsql
-		host: 0.0.0.0
+		host: db
 		port: 5432
 		dbname: products-api
 		user: products-api

@@ -1,4 +1,4 @@
-INSERT INTO "app_products" ("id", "name", "price", "created_at", "updated_at") VALUES
+INSERT INTO "product" ("id", "name", "price", "created_at", "updated_at") VALUES
 (1,	'Pánská plněná zimní bunda',	2719,	'2023-11-03 15:31:50.306899',	'2023-11-03 15:31:50.306899'),
 (2,	'Pánská outdoor bunda',	2924,	'2023-11-03 15:32:24.993123',	'2023-11-03 15:32:24.993123'),
 (3,	'Pánský zimní kabát',	1299,	'2023-11-03 15:33:08.006956',	'2023-11-03 15:33:08.006956'),

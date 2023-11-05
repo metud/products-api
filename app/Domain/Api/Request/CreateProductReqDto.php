@@ -9,7 +9,7 @@ final class CreateProductReqDto
 
 	/**
 	 * @Assert\NotBlank
-	 * @Assert\Name
+	 * @Assert\name
 	 */
 	public string $name;
 
