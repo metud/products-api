@@ -24,12 +24,12 @@ class OpenApiController extends BasePubV1Controller
 
 	/**
 	 * @Apitte\OpenApi("
-	 *   summary: Get OpenAPI definition.
+	 *   summary: Get OpenAPI definition
 	 * ")
-	 * @Apitte\Path("/meta")
+	 * @Apitte\Path("/")
 	 * @Apitte\Method("GET")
 	 */
-	public function meta(ApiRequest $request, ApiResponse $response): ResponseInterface
+	public function index(ApiRequest $request, ApiResponse $response): ResponseInterface
 	{
 		return $response
 			->withAddedHeader('Access-Control-Allow-Origin', '*')

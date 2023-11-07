@@ -8,7 +8,6 @@ use Apitte\Core\Http\ApiRequest;
 use Apitte\Core\Http\ApiResponse;
 use App\Domain\Api\Facade\ProductsFacade;
 use App\Domain\Api\Request\CreateProductReqDto;
-use App\Module\PubV1\BasePubV1Controller;
 use Doctrine\DBAL\Exception\DriverException;
 use Nette\Http\IResponse;
 
@@ -28,7 +27,7 @@ class ProductCreateController extends BasePubV1Controller
 
 	/**
 	 * @Apitte\OpenApi("
-	 *   summary: Create new product.
+	 *   summary: Create a new product
 	 * ")
 	 * @Apitte\Path("/create")
 	 * @Apitte\Method("POST")
@@ -39,14 +38,14 @@ class ProductCreateController extends BasePubV1Controller
 		/** @var CreateProductReqDto $dto */
 		$dto = $request->getParsedBody();
 
-        //TODO smazat last logged at z db
         //curl -X POST -d '{"name": "Nový produkt", "price": 1337}' http://localhost/api/public/v1/products/create
 
 		try {
 			$this->productsFacade->create($dto);
 
 			return $response->withStatus(IResponse::S201_Created)
-				->withHeader('Content-Type', 'application/json');
+				->withHeader('Content-Type', 'application/json')
+                ->writeJsonBody(['status' => 'ok', 'code' => IResponse::S201_Created, 'message' => 'Product was created successfully']);
 		} catch (DriverException $e) {
 			throw ServerErrorException::create()
 				->withMessage('Cannot create product')

@@ -2,9 +2,8 @@ CREATE TABLE "product" (
     id SERIAL PRIMARY KEY,
     name varchar(100) NOT NULL,
     price DOUBLE PRECISION NOT NULL,
-    created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    last_logged_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL
+    created_at timestamp(0) WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp(0) WITHOUT TIME ZONE DEFAULT NULL
 );
 
 CREATE TABLE "user" (

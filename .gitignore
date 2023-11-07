@@ -1,5 +1,6 @@
 # Nette
 #/config/local.neon
+/var/tmp/cache
 
 # Composer
 /vendor

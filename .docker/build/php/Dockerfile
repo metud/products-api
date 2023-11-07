@@ -12,8 +12,8 @@ RUN a2enmod rewrite
 
 RUN docker-php-ext-install pgsql pdo pdo_pgsql
 RUN docker-php-ext-enable pgsql pdo pdo_pgsql
-#RUN docker-php-ext-install mysqli pdo pdo_mysql
-#RUN docker-php-ext-enable mysqli pdo pdo_mysql
+RUN docker-php-ext-install mysqli pdo pdo_mysql
+RUN docker-php-ext-enable mysqli pdo pdo_mysql
 
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 RUN composer self-update

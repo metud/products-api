@@ -20,15 +20,15 @@ class StaticController extends BaseV1Controller
 	}
 
 	/**
-	 * @Apitte\OpenApi("
-	 *   summary: Get static text
-	 * ")
-	 * @Apitte\Path("/text")
-	 * @Apitte\Method("GET")
-	 */
+	  @Apitte\OpenApi("
+	    summary: Get static text
+	  ")
+	  @Apitte\Path("/text")
+	  @Apitte\Method("GET")
+
 	public function text(ApiRequest $request): string
 	{
 		return $this->text;
-	}
+	}*/
 
 }

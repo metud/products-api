@@ -20,6 +20,18 @@ api:
 			tracy: false
 			autobasepath: true
 		Apitte\OpenApi\DI\OpenApiPlugin:
+		    definition:
+		        openapi: 3.0.0
+		        info:
+		            title: Products API
+		            version: 1.0.0
+		            description: Simple products API
+		    #define SwaggerUI
+		    swaggerUi:
+		        url: '/api/public/v1/openapi/'
+		        expansion: list
+		        filter: true
+		        title: Products API v1
 
 services:
 	middleware.tryCatch:

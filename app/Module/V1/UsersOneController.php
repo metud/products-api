@@ -34,7 +34,7 @@ class UsersOneController extends BaseV1Controller
 	 * @Apitte\RequestParameters({
 	 *      @Apitte\RequestParameter(name="email", in="query", type="string", description="User e-mail address")
 	 * })
-	 */
+
 	public function byEmail(ApiRequest $request): UserResDto
 	{
 		try {
@@ -44,7 +44,7 @@ class UsersOneController extends BaseV1Controller
 				->withMessage('User not found')
 				->withCode(IResponse::S404_NotFound);
 		}
-	}
+	}*/
 
 	/**
 	 * @Apitte\OpenApi("
@@ -55,7 +55,7 @@ class UsersOneController extends BaseV1Controller
 	 * @Apitte\RequestParameters({
 	 *      @Apitte\RequestParameter(name="id", in="path", type="int", description="User ID")
 	 * })
-	 */
+
 	public function byId(ApiRequest $request): UserResDto
 	{
 		try {
@@ -65,6 +65,6 @@ class UsersOneController extends BaseV1Controller
 				->withMessage('User not found')
 				->withCode(IResponse::S404_NotFound);
 		}
-	}
+	}*/
 
 }

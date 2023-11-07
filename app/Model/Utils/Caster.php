@@ -16,4 +16,13 @@ final class Caster
 		throw new InvalidStateException('Cannot cast to integer');
 	}
 
+    public static function toFloat(mixed $value): float
+    {
+        if (is_string($value) || is_int($value) || is_float($value)) {
+            return floatval($value);
+        }
+
+        throw new InvalidStateException('Cannot cast to float');
+    }
+
 }

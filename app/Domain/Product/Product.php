@@ -27,12 +27,6 @@ class Product extends AbstractEntity
 	/** @ORM\Column(type="float", nullable=FALSE, unique=false) */
 	private float $price;
 
-    /**
-     * @var DateTime|NULL
-     * @ORM\Column(type="datetime", nullable=TRUE)
-     */
-    private ?DateTime $lastLoggedAt = null;
-
 	public function __construct(string $name, float $price)
 	{
 		$this->name = $name;
@@ -44,7 +38,7 @@ class Product extends AbstractEntity
 		return $this->name;
 	}
 
-	public function changeName(string $name): void
+	public function setName(string $name): void
 	{
 		$this->name = $name;
 	}
@@ -54,18 +48,9 @@ class Product extends AbstractEntity
 		return $this->price;
 	}
 
-    public function changePrice(float $price): void
+    public function setPrice(float $price): void
     {
         $this->price = $price;
     }
 
-    public function changeLoggedAt(): void
-    {
-        $this->lastLoggedAt = new DateTime();
-    }
-
-    public function getLastLoggedAt(): ?DateTime
-    {
-        return $this->lastLoggedAt;
-    }
 }
