@@ -27,9 +27,9 @@ Install with [docker compose](https://github.com/docker/compose)
 - [DELETE] http://localhost/api/public/v1/products/delete/{id} - delete product
 
 ### Secured API endpoints
-- API access token is received from table 'user' in database
+- API access token is received from table `user` in database
 - [GET] http://localhost/api/v1/products?_access_token={TOKEN} - secured list of products
-  - It can also be passed with `X-Token` header
+  - Token can also be passed with `X-Token` header
 
 ### Features
 - It's possible to limit number of products by `limit` and `offset` parameters, default `limit=10` and `offset=0`
