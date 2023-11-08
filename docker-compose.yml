@@ -21,6 +21,12 @@ services:
     links:
       - database
 
+  composer:
+    image: composer/composer:latest
+    volumes:
+      - ./:/app
+    command: composer install --ignore-platform-reqs --no-progress
+
   database:
     container_name: db
     #image: db

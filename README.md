@@ -22,15 +22,13 @@ Install with [docker compose](https://github.com/docker/compose)
 
 1) Clone repository
 
-2) Run `composer install`
+2) Run `docker-compose build`
 
-3) Run `docker-compose build`
+3) Run `docker-compose up`
 
-4) Run `docker-compose up`
+4) Modify `config/local.neon` if needed
 
-5) Modify `config/local.neon` if needed
-
-6) Open http://localhost/index.html for Swagger UI
+5) Open http://localhost/index.html for Swagger UI
 
   - sample database data provided in `/.docker/build/database/sample-data.sql`
 
