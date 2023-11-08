@@ -24,11 +24,11 @@ Install with [docker compose](https://github.com/docker/compose)
 
 2) Run `composer install`
 
-3) Modify `config/local.neon` if needed
+3) Run `docker-compose build`
 
-4) Run `docker-compose build`
+4) Run `docker-compose up`
 
-5) Run `docker-compose up`
+5) Modify `config/local.neon` if needed
 
 6) Open http://localhost/index.html for Swagger UI
 
