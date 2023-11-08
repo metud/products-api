@@ -17,6 +17,3 @@ RUN docker-php-ext-enable mysqli pdo pdo_mysql
 
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 RUN composer self-update
-
-#COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-#RUN composer self-update
