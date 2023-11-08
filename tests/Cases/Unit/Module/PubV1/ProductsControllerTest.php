@@ -16,7 +16,7 @@ require_once __DIR__ . '/../../../../bootstrap.php';
 class ProductsControllerTest extends TestCase
 {
     /** @var ProductsController */
-    private $controller;
+    private ProductsController $controller;
 
     public function setUp(): void
     {
