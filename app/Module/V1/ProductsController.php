@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace App\Module\PubV1;
+namespace App\Module\V1;
 
 use Apitte\Core\Annotation\Controller as Apitte;
 use Apitte\Core\Http\ApiRequest;
@@ -11,26 +11,26 @@ use Psr\Log\LoggerInterface;
 
 /**
  * @Apitte\Path("/products")
- * @Apitte\Tag("Products")
+ * @Apitte\Tag("Secured products")
  */
-class ProductsController extends BasePubV1Controller
+class ProductsController extends BaseV1Controller
 {
 
-    private ProductsFacade $productsFacade;
+	private ProductsFacade $productsFacade;
     private LoggerInterface $logger;
 
-    public function __construct(ProductsFacade $productsFacade, LoggerInterface $logger)
-    {
-        $this->productsFacade = $productsFacade;
+	public function __construct(ProductsFacade $productsFacade, LoggerInterface $logger)
+	{
+		$this->productsFacade = $productsFacade;
         $this->logger = $logger;
-    }
+	}
 
-    /**
-     * @Apitte\OpenApi("
-     *   summary: Return list of products
-     * ")
-     * @Apitte\Path("/")
-     * @Apitte\Method("GET")
+	/**
+	 * @Apitte\OpenApi("
+	 *   summary: Return list of products
+	 * ")
+	 * @Apitte\Path("/")
+	 * @Apitte\Method("GET")
      * @Apitte\RequestParameters({
      *      @Apitte\RequestParameter(name="limit", type="int", in="query", required=false, description="Data limit"),
      *      @Apitte\RequestParameter(name="offset", type="int", in="query", required=false, description="Data offset"),
@@ -38,10 +38,9 @@ class ProductsController extends BasePubV1Controller
      *      @Apitte\RequestParameter(name="minPrice", type="float", in="query", required=false, description="Min price filter"),
      *      @Apitte\RequestParameter(name="maxPrice", type="float", in="query", required=false, description="Max price filter")
      *  })
-     */
+	 */
     public function index(ApiRequest $request, ApiResponse $response): ApiResponse
-    {
-        //endpoint is http://example.com/api/public/v1/products
+	{
         try {
             $limit = Caster::toInt($request->getParameter('limit', 10));
             $offset = Caster::toInt($request->getParameter('offset', 0));
@@ -62,8 +61,9 @@ class ProductsController extends BasePubV1Controller
                 ->writeJsonBody($getProducts);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            return $response->writeJsonBody(['status' => 'error', 'code' => 500, 'message' => 'An unexpected error occurred.']);
+            $response->withStatus(500);
+            $response->writeJsonBody(['status' => 'error', 'code' => 500, 'message' => 'An unexpected error occurred.']);
         }
-    }
+	}
 
 }

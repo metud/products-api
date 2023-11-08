@@ -99,25 +99,38 @@ final class ProductsFacade
         }
     }
 
-    public function findFilteredProducts(int $limit, int $offset, ?string $name = null): array
+    public function findFilteredProducts(
+        int $limit = 10,
+        int $offset = 0,
+        ?string $name = null,
+        float $minPrice = null,
+        float $maxPrice = null
+    ): array
     {
-        $criteria = [];
-        if ($name !== null) {
-            $criteria['name'] = $name;
-        }
-        //pripadne filtrovani dle ceny
-        /*if ($minPrice !== null) {
-            $criteria['price'] = [
-                '$gte' => $minPrice
-            ];
-        }
-        if ($maxPrice !== null) {
-            $criteria['price'] = [
-                '$lte' => $maxPrice
-            ];
-        }*/
+        $qb = $this->em->getRepository(Product::class)->createQueryBuilder('p');
 
-        return $this->findBy($criteria, ['id' => 'ASC'], $limit, $offset);
+        if(!empty($name)){
+            $qb->andWhere($qb->expr()->like('p.name', ':name'))
+                ->setParameter('name', '%'.$name.'%');
+        }
+        if(!empty($minPrice)){
+            $qb->andWhere('p.price >= '.$minPrice.'');
+        }
+        if(!empty($maxPrice)){
+            $qb->andWhere('p.price <= '.$maxPrice.'');
+        }
+
+        $qb->setMaxResults($limit)
+            ->setFirstResult($offset);
+
+        $result = [];
+
+        $entities = $qb->getQuery()->getResult();
+        foreach ($entities as $entity) {
+            $result[] = ProductResDto::from($entity);
+        }
+
+        return $result;
     }
 
 }

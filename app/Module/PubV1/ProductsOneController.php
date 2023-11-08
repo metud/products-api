@@ -5,13 +5,11 @@ namespace App\Module\PubV1;
 use Apitte\Core\Annotation\Controller as Apitte;
 use Apitte\Core\Exception\Api\ClientErrorException;
 use Apitte\Core\Http\ApiRequest;
-use Apitte\Core\Http\ApiResponse;
 use App\Domain\Api\Facade\ProductsFacade;
 use App\Domain\Api\Response\ProductResDto;
 use App\Model\Exception\Runtime\Database\EntityNotFoundException;
 use App\Model\Utils\Caster;
 use Nette\Http\IResponse;
-use Nette\Utils\Json;
 
 /**
  * @Apitte\Path("/products")
@@ -40,10 +38,6 @@ class ProductsOneController extends BasePubV1Controller
 	public function byId(ApiRequest $request): ProductResDto //, ApiResponse $response): ApiResponse
 	{
 		try {
-            //$getProduct = $this->productsFacade->findOne(Caster::toInt($request->getParameter('id')));
-
-            //return $response->writeBody(Json::encode($getProduct));
-
 			return $this->productsFacade->findOne(Caster::toInt($request->getParameter('id')));
 		} catch (EntityNotFoundException $e) {
 			throw ClientErrorException::create()

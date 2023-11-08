@@ -27,16 +27,19 @@ class UserCreateController extends BaseV1Controller
 
 	/**
 	 * @Apitte\OpenApi("
-	 *   summary: Create new user.
+	 *   summary: Create a new user
 	 * ")
 	 * @Apitte\Path("/create")
 	 * @Apitte\Method("POST")
 	 * @Apitte\RequestBody(entity="App\Domain\Api\Request\CreateUserReqDto")
 	 */
-	/*public function create(ApiRequest $request, ApiResponse $response): ApiResponse
+
+    /*
+    public function create(ApiRequest $request, ApiResponse $response): ApiResponse
 	{
 		/** @var CreateUserReqDto $dto */
-		/*$dto = $request->getParsedBody();
+    /*
+		$dto = $request->getParsedBody();
 
 		try {
 			$this->usersFacade->create($dto);
@@ -48,6 +51,7 @@ class UserCreateController extends BaseV1Controller
 				->withMessage('Cannot create user')
 				->withPrevious($e);
 		}
-	}*/
+	}
+    */
 
 }

@@ -8,8 +8,8 @@ parameters:
 			email: dev@dev.dev
 			presenter: Front:Error
 
-	static:
-		text: "This is example of static text"
+	#static:
+		#text: "This is example of static text"
 
 	database:
 		driver: pdo_pgsql

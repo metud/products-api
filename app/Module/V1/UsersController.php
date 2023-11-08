@@ -24,7 +24,7 @@ class UsersController extends BaseV1Controller
 
 	/**
 	 * @Apitte\OpenApi("
-	 *   summary: List users.
+	 *   summary: Return list of users
 	 * ")
 	 * @Apitte\Path("/")
 	 * @Apitte\Method("GET")
@@ -34,12 +34,13 @@ class UsersController extends BaseV1Controller
 	 * })
 	 * @return UserResDto[]
 	 */
-	/*public function index(ApiRequest $request): array
+    /*
+    public function index(ApiRequest $request): array
 	{
 		return $this->usersFacade->findAll(
 			Caster::toInt($request->getParameter('limit', 10)),
 			Caster::toInt($request->getParameter('offset', 0))
 		);
-	}*/
-
+	}
+    */
 }
