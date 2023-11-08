@@ -36,15 +36,15 @@ Install with [docker compose](https://github.com/docker/compose)
 
 ## Additional info
 ### Public API endpoints
-- <font color="#3f51b5">[GET]</font> http://localhost/api/public/v1/products - list of products
-- <font color="#3f51b5">[GET]</font> http://localhost/api/public/v1/products/{id} - product detail
-- <font color="#009688">[POST]</font> http://localhost/api/public/v1/products/create - create new product
-- <font color="#ff9800">[PUT]</font> http://localhost/api/public/v1/products/update/{id} - update product
-- <font color="#f44336">[DELETE]</font> http://localhost/api/public/v1/products/delete/{id} - delete product
+- [GET] http://localhost/api/public/v1/products - list of products
+- [GET] http://localhost/api/public/v1/products/{id} - product detail
+- [POST] http://localhost/api/public/v1/products/create - create new product
+- [PUT] http://localhost/api/public/v1/products/update/{id} - update product
+- [DELETE] http://localhost/api/public/v1/products/delete/{id} - delete product
 
 ### Secured API endpoints
 - API access token is received from table `user` in database
-- <font color="#3f51b5">[GET]</font>  http://localhost/api/v1/products?_access_token={TOKEN} - secured list of products
+- [GET] http://localhost/api/v1/products?_access_token={TOKEN} - secured list of products
   - Token can also be passed with `X-Token` header
 
 ### Features
